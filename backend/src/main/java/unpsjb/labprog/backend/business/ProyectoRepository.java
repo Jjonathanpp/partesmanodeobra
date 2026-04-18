@@ -1,0 +1,11 @@
+package unpsjb.labprog.backend.business;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import unpsjb.labprog.backend.model.Proyecto;
+
+public interface ProyectoRepository extends JpaRepository<Proyecto, Long> {
+    List<Proyecto> findByDescripcionContainingIgnoreCase(String q);
+}
