@@ -42,7 +42,7 @@ services:
     #working_dir: /home/node 
     # -- Descomentar luego de ng new
     working_dir: /home/node/cli 
-    command: ng serve --host=0.0.0.0
+    command: ng serve --host=0.0.0.0 --proxy-config=proxy.conf.json
     ### ------------------------- ####
     restart: always
     ports:

@@ -9,7 +9,7 @@ import { Empresa } from './empresa';
 })
 export class EmpresaService {
 
-  private empresasUrl = 'rest/empresas';
+  private empresasUrl = "api/empresas";
 
   constructor(private httpClient: HttpClient) { }
 
@@ -33,11 +33,11 @@ export class EmpresaService {
 
   byPage(page: number, size: number): Observable<DataPackage> {
     return this.httpClient.get<DataPackage>(
-      `${this.empresasUrl}/page?page=${page - 1}&size=${size}`
+      `${this.empresasUrl}/page?page=${page - 1}&size=${size}`,
     );
   }
 
-  search(term: string): Observable<DataPackage> {
-    return this.httpClient.get<DataPackage>(`${this.empresasUrl}/search/${term}`);
+  search(searchTerm: string): Observable<DataPackage> {
+    return this.httpClient.get<DataPackage>(`${this.empresasUrl}/search/${searchTerm}`)
   }
 }

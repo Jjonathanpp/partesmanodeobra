@@ -1,153 +1,90 @@
-import { CommonModule, Location, UpperCasePipe } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Empresa } from './empresa';
-import { EmpresaService } from './empresa.service';
+import { CommonModule, Location, UpperCasePipe } from "@angular/common";
+import { Component, OnInit } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
+import { Empresa } from "./empresa";
+import { EmpresaService } from "./empresa.service";
 
 @Component({
-  selector: 'app-empresa-detail',
+  selector: "app-empresa-detail",
   standalone: true,
-  imports: [UpperCasePipe, FormsModule, CommonModule, RouterModule],
+  imports: [UpperCasePipe, FormsModule, CommonModule],
   template: `
     <div *ngIf="empresa">
-
-      <!-- Breadcrumb -->
-      <nav aria-label="breadcrumb" class="mt-2">
-        <ol class="breadcrumb justify-content-end mb-0">
-          <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-          <li class="breadcrumb-item"><a routerLink="/empresas">Empresas</a></li>
-          <li class="breadcrumb-item active" aria-current="page">
-            {{ empresa.id ? empresa.nombre : 'Nuevo' }}
-          </li>
-        </ol>
-      </nav>
-
-      <!-- Card -->
-      <div class="card shadow-sm mt-2">
-        <div class="card-body">
-
-          <!-- Header: título + botones -->
-          <div class="d-flex align-items-center mb-3 gap-2">
-            <h5 class="card-title mb-0 me-2">
-              {{ empresa.id ? 'Editar Empresa' : 'Nueva Empresa' }}
-            </h5>
-            <button
-              (click)="save()"
-              [disabled]="form.invalid"
-              class="btn btn-success btn-sm rounded-pill px-3">
-              <i class="fas fa-save me-1"></i>Guardar
-            </button>
-            <button
-              (click)="goBack()"
-              class="btn btn-danger btn-sm rounded-pill px-3">
-              <i class="fas fa-times me-1"></i>Cancelar
-            </button>
+      <h2>{{ empresa.id ? (empresa.nombre | uppercase) : 'NUEVA EMPRESA' }}</h2>
+      <form #form="ngForm">
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Razón Social:</label>
+          <input
+            name="nombre"
+            placeholder="Razón Social"
+            class="form-control"
+            [(ngModel)]="empresa.nombre"
+            required
+            #nombre="ngModel"
+          />
+          <div
+            *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
+            class="alert alert-danger mt-1"
+          >
+            <div *ngIf="nombre.errors?.['required']">
+              La razón social es requerida.
+            </div>
           </div>
-
-          <form #form="ngForm">
-
-            <!-- Fila 1: Nombre + CUIT (Descripción) -->
-            <div class="row align-items-center mb-2 g-2">
-              <div class="col-auto">
-                <span class="badge bg-secondary campo-label">Nombre</span>
-              </div>
-              <div class="col-md-4">
-                <input
-                  name="nombre"
-                  placeholder="Nombre de la empresa"
-                  class="form-control form-control-sm input-campo"
-                  [(ngModel)]="empresa.nombre"
-                  required
-                  #nombre="ngModel"
-                />
-                <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
-                     class="text-danger small mt-1">
-                  El nombre es requerido.
-                </div>
-              </div>
-
-              <div class="col-auto ms-3">
-                <span class="badge bg-secondary campo-label">Descripción</span>
-              </div>
-              <div class="col-md-4">
-                <input
-                  name="cuit"
-                  placeholder="XX-XXXXXXXX-X"
-                  class="form-control form-control-sm input-campo"
-                  [(ngModel)]="empresa.cuit"
-                  required
-                  #cuit="ngModel"
-                />
-                <div *ngIf="cuit.invalid && (cuit.dirty || cuit.touched)"
-                     class="text-danger small mt-1">
-                  El CUIT es requerido.
-                </div>
-              </div>
-            </div>
-
-            <!-- Fila 2: Observaciones -->
-            <div class="row align-items-center mb-2 g-2">
-              <div class="col-auto">
-                <span class="badge bg-secondary campo-label">Observaciones</span>
-              </div>
-              <div class="col">
-                <input
-                  name="observaciones"
-                  placeholder="Observaciones de la empresa"
-                  class="form-control form-control-sm input-campo"
-                  [(ngModel)]="empresa.observaciones"
-                />
-              </div>
-            </div>
-
-          </form>
         </div>
-      </div>
+
+        <div class="mb-3">
+          <label for="cuit" class="form-label">CUIT:</label>
+          <input
+            name="cuit"
+            placeholder="e.g., 30-12345678-9"
+            class="form-control"
+            [(ngModel)]="empresa.cuit"
+            required
+            #cuit="ngModel"
+          />
+          <div
+            *ngIf="cuit.invalid && (cuit.dirty || cuit.touched)"
+            class="alert alert-danger mt-1"
+          >
+             <div *ngIf="cuit.errors?.['required']">
+               El CUIT es requerido.
+             </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="observaciones" class="form-label">Observaciones:</label>
+          <textarea
+            name="observaciones"
+            placeholder="Observaciones"
+            class="form-control"
+            [(ngModel)]="empresa.observaciones"
+          ></textarea>
+        </div>
+
+        <button (click)="goBack()" class="btn btn-danger">Atrás</button>
+        &nbsp;
+        <button
+          (click)="save()"
+          class="btn btn-success"
+          [disabled]="form.invalid"
+        >
+          Guardar
+        </button>
+      </form>
     </div>
   `,
-  styles: [`
-    .campo-label {
-      font-size: 0.78rem;
-      min-width: 105px;
-      text-align: center;
-      background-color: #6c757d !important;
-    }
-    .input-campo {
-      border-color: #4a90d9 !important;
-    }
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  `]
+  styles: ``,
 })
-export class EmpresaDetail {
+export class EmpresaDetailComponent implements OnInit {
   empresa!: Empresa;
 
   constructor(
     private route: ActivatedRoute,
     private empresaService: EmpresaService,
-    private location: Location
+    private location: Location,
   ) {}
-
-  ngOnInit(): void {
-    this.get();
-  }
-
-  get(): void {
-    const id = this.route.snapshot.paramMap.get('id')!;
-    if (id === 'nuevo') {
-      this.empresa = <Empresa>{};
-    } else {
-      this.empresaService
-        .get(Number(id))
-        .subscribe((dataPackage) => (this.empresa = <Empresa>dataPackage.data));
-    }
-  }
 
   goBack(): void {
     this.location.back();
@@ -158,5 +95,20 @@ export class EmpresaDetail {
       this.empresa = <Empresa>dataPackage.data;
       this.goBack();
     });
+  }
+
+  get(): void {
+    const id = this.route.snapshot.paramMap.get("id")!;
+    if (id === "new") {
+      this.empresa = <Empresa>{};
+    } else {
+      this.empresaService
+        .get(Number(id))
+        .subscribe((dataPackage) => (this.empresa = <Empresa>dataPackage.data));
+    }
+  }
+
+  ngOnInit() {
+    this.get();
   }
 }
