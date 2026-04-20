@@ -1,4 +1,4 @@
-import { CommonModule, Location, UpperCasePipe } from "@angular/common";
+import { CommonModule, Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
@@ -8,74 +8,117 @@ import { EmpresaService } from "./empresa.service";
 @Component({
   selector: "app-empresa-detail",
   standalone: true,
-  imports: [UpperCasePipe, FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule],
   template: `
-    <div *ngIf="empresa">
-      <h2>{{ empresa.id ? (empresa.nombre | uppercase) : 'NUEVA EMPRESA' }}</h2>
+    <div *ngIf="empresa" class="container mt-4">
+      <!-- Miga de pan / Navegación Superior (Breadcrumbs) -->
+      <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2 border-dark" style="border-width: 2px !important;">
+        <h3 class="m-0 fw-normal">Delivery <span class="bg-light px-2 py-1 ms-2 border border-dark rounded" style="font-size: 0.9rem; font-weight: normal;">Empresas (Clientes)</span></h3>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb m-0" style="font-size: 0.9rem;">
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none" routerLink="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none" routerLink="/empresas">Empresas</a></li>
+            <li class="breadcrumb-item active text-dark" aria-current="page">{{ empresa.id ? 'Editar' : 'Nuevo' }}</li>
+          </ol>
+        </nav>
+      </div>
+
       <form #form="ngForm">
-        <div class="mb-3">
-          <label for="nombre" class="form-label">Razón Social:</label>
-          <input
-            name="nombre"
-            placeholder="Razón Social"
-            class="form-control"
-            [(ngModel)]="empresa.nombre"
-            required
-            #nombre="ngModel"
-          />
-          <div
-            *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
-            class="alert alert-danger mt-1"
+        <!-- Encabezado y botones -->
+        <div class="d-flex align-items-center mb-4">
+          <h4 class="m-0 me-4 fw-normal">{{ empresa.id ? empresa.nombre : 'Nueva Empresa' }}</h4>
+
+          <button
+            (click)="save()"
+            class="btn rounded-pill px-4 me-2"
+            [disabled]="form.invalid"
+            style="background-color: #9bcc8f; border: 2px solid #000; color: #fff; font-weight: 500;"
           >
-            <div *ngIf="nombre.errors?.['required']">
-              La razón social es requerida.
+            Guardar
+          </button>
+
+          <button
+            (click)="goBack()"
+            class="btn rounded-pill px-4"
+            style="background-color: #c98bb3; border: 2px solid #000; color: #fff; font-weight: 500;"
+          >
+            Cancelar
+          </button>
+        </div>
+
+        <!-- Campos de entrada Nombre y CUIT en la misma fila -->
+        <div class="row mb-3">
+          <!-- Nombre -->
+          <div class="col-md-6 d-flex align-items-center">
+            <span class="badge text-bg-secondary rounded me-2 py-2 px-3" style="min-width: 100px; font-weight: normal; background-color: #a0a0a0 !important;">Nombre</span>
+            <div class="flex-grow-1">
+              <input
+                name="nombre"
+                placeholder="Razón Social"
+                class="form-control input-blue-border"
+                [(ngModel)]="empresa.nombre"
+                required
+                #nombre="ngModel"
+              />
+              <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)" class="text-danger mt-1 small">
+                <div *ngIf="nombre.errors?.['required']">La razón social es requerida.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Descripción (CUIT) -->
+          <div class="col-md-6 d-flex align-items-center mt-3 mt-md-0">
+            <span class="badge text-bg-secondary rounded me-2 py-2 px-3" style="min-width: 100px; font-weight: normal; background-color: #a0a0a0 !important;">Descripción</span>
+            <div class="flex-grow-1">
+              <input
+                name="cuit"
+                placeholder="30-11111111-9"
+                class="form-control input-blue-border"
+                [(ngModel)]="empresa.cuit"
+                required
+                #cuit="ngModel"
+              />
+              <div *ngIf="cuit.invalid && (cuit.dirty || cuit.touched)" class="text-danger mt-1 small">
+                <div *ngIf="cuit.errors?.['required']">El CUIT es requerido.</div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="mb-3">
-          <label for="cuit" class="form-label">CUIT:</label>
-          <input
-            name="cuit"
-            placeholder="e.g., 30-12345678-9"
-            class="form-control"
-            [(ngModel)]="empresa.cuit"
-            required
-            #cuit="ngModel"
-          />
-          <div
-            *ngIf="cuit.invalid && (cuit.dirty || cuit.touched)"
-            class="alert alert-danger mt-1"
-          >
-             <div *ngIf="cuit.errors?.['required']">
-               El CUIT es requerido.
-             </div>
+        <!-- Campo Observaciones -->
+        <div class="row mb-3 mt-4">
+          <div class="col-12 d-flex align-items-start">
+            <span class="badge text-bg-secondary rounded me-2 py-2 px-3 mt-1" style="min-width: 120px; font-weight: normal; background-color: #a0a0a0 !important;">Observaciones</span>
+            <div class="flex-grow-1">
+              <textarea
+                name="observaciones"
+                placeholder="Observaciones de la empresa"
+                class="form-control input-blue-border"
+                [(ngModel)]="empresa.observaciones"
+                rows="2"
+              ></textarea>
+            </div>
           </div>
         </div>
 
-        <div class="mb-3">
-          <label for="observaciones" class="form-label">Observaciones:</label>
-          <textarea
-            name="observaciones"
-            placeholder="Observaciones"
-            class="form-control"
-            [(ngModel)]="empresa.observaciones"
-          ></textarea>
-        </div>
-
-        <button (click)="goBack()" class="btn btn-danger">Atrás</button>
-        &nbsp;
-        <button
-          (click)="save()"
-          class="btn btn-success"
-          [disabled]="form.invalid"
-        >
-          Guardar
-        </button>
       </form>
     </div>
   `,
-  styles: ``,
+  styles: `
+    .input-blue-border {
+      border: 2px solid #0000ff;
+      border-radius: 0;
+    }
+    .input-blue-border:focus {
+      border-color: #0000ff;
+      box-shadow: none;
+    }
+    .breadcrumb-item + .breadcrumb-item::before {
+      content: ">";
+      color: #000;
+      font-weight: bold;
+    }
+  `,
 })
 export class EmpresaDetailComponent implements OnInit {
   empresa!: Empresa;
