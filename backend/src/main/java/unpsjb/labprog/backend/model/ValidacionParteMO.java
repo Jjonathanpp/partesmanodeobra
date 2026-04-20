@@ -20,9 +20,6 @@ public class ValidacionParteMO {
     private String descripcion;
     private String observaciones;
 
-    /**
-     * Nombre del validador (clase o método que ejecuta esta regla de validación).
-     */
     private String validador;
 
     @Enumerated(EnumType.STRING)

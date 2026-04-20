@@ -12,8 +12,11 @@ import { RouterModule } from '@angular/router';
           <p class="lead">Sistema de Gestión de Partes de Mano de Obra</p>
           <hr class="my-4">
           <p class="text-secondary">Selecciona una opción del menú para comenzar.</p>
-          <a class="btn btn-primary btn-lg mt-3" routerLink="/empresas" role="button">
+          <a class="btn btn-primary btn-lg mt-3 me-2" routerLink="/empresas" role="button">
             <i class="fas fa-building me-2"></i>Ir a Empresas
+          </a>
+          <a class="btn btn-success btn-lg mt-3" routerLink="/proyectos" role="button">
+            <i class="fas fa-project-diagram me-2"></i>Ir a Proyectos
           </a>
         </div>
       </div>

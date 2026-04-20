@@ -5,15 +5,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import unpsjb.labprog.backend.Response;
-import unpsjb.labprog.backend.business.service.EmpresaService;
-import unpsjb.labprog.backend.model.Empresa;
+import unpsjb.labprog.backend.business.service.ProyectoService;
+import unpsjb.labprog.backend.model.Proyecto;
 
 @RestController
-@RequestMapping("empresas")
-public class EmpresaPresenter {
+@RequestMapping("proyectos")
+public class ProyectoPresenter {
 
     @Autowired
-    EmpresaService service;
+    ProyectoService service;
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Object> findAll() {
@@ -22,10 +22,10 @@ public class EmpresaPresenter {
 
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public ResponseEntity<Object> findById(@PathVariable("id") long id) {
-        Empresa e = service.findById(id);
-        return (e != null)
-            ? Response.ok(e)
-            : Response.notFound("Empresa id " + id + " no encontrada");
+        Proyecto p = service.findById(id);
+        return (p != null)
+            ? Response.ok(p)
+            : Response.notFound("Proyecto id " + id + " no encontrado");
     }
 
     @RequestMapping(value = "/page", method = RequestMethod.GET)
@@ -41,27 +41,26 @@ public class EmpresaPresenter {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Object> create(@RequestBody Empresa empresa) {
-        if (empresa.getId() != null) {
-            return Response.error(empresa,
-                "Está intentando crear una empresa. Esta no puede tener un id definido.");
+    public ResponseEntity<Object> create(@RequestBody Proyecto proyecto) {
+        if (proyecto.getId() != null) {
+            return Response.error(proyecto,
+                "Está intentando crear un proyecto. Este no puede tener un id definido porque la BD lo autogenera.");
         }
-        Empresa savedEmpresa = service.save(empresa);
-        return Response.ok(savedEmpresa, "Cliente " + savedEmpresa.getNombre() + " con cuit " + savedEmpresa.getCuit() + " cargado correctamente");
+        return Response.ok(service.save(proyecto));
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<Object> update(@RequestBody Empresa empresa) {
-        if (empresa.getId() == null || empresa.getId() <= 0) {
-            return Response.error(empresa,
-                "Debe especificar un id válido para poder modificar una empresa.");
+    public ResponseEntity<Object> update(@RequestBody Proyecto proyecto) {
+        if (proyecto.getId() == null || proyecto.getId() <= 0) {
+            return Response.error(proyecto,
+                "Debe especificar un id válido para poder modificar un proyecto existente.");
         }
-        return Response.ok(service.save(empresa));
+        return Response.ok(service.save(proyecto));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> delete(@PathVariable("id") long id) {
         service.delete(id);
-        return Response.ok("Empresa " + id + " borrada con éxito.");
+        return Response.ok("Proyecto " + id + " borrado con éxito.");
     }
 }

@@ -14,10 +14,10 @@ import { EmpresaService } from "./empresa.service";
       <h2>{{ empresa.id ? (empresa.nombre | uppercase) : 'NUEVA EMPRESA' }}</h2>
       <form #form="ngForm">
         <div class="mb-3">
-          <label for="nombre" class="form-label">Razón Social:</label>
+          <label for="nombre" class="form-label">Nombre:</label>
           <input
             name="nombre"
-            placeholder="Razón Social"
+            placeholder="Nombre"
             class="form-control"
             [(ngModel)]="empresa.nombre"
             required
@@ -28,7 +28,7 @@ import { EmpresaService } from "./empresa.service";
             class="alert alert-danger mt-1"
           >
             <div *ngIf="nombre.errors?.['required']">
-              La razón social es requerida.
+              El nombre es requerido.
             </div>
           </div>
         </div>

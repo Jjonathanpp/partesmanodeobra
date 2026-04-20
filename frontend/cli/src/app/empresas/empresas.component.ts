@@ -18,7 +18,7 @@ import { EmpresaService } from "./empresa.service";
         <thead>
           <tr>
             <th>#</th>
-            <th>Razón Social</th>
+            <th>Nombre</th>
             <th>CUIT</th>
             <th>Acciones</th>
           </tr>

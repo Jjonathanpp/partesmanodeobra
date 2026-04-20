@@ -1,4 +1,4 @@
-package unpsjb.labprog.backend.business;
+package unpsjb.labprog.backend.business.service;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -9,35 +9,38 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import unpsjb.labprog.backend.model.Empresa;
+import unpsjb.labprog.backend.business.repository.ProyectoRepository;
+import unpsjb.labprog.backend.model.Proyecto;
 
 @Service
-public class EmpresaService {
+public class ProyectoService {
 
     @Autowired
-    EmpresaRepository repository;
+    ProyectoRepository repository;
 
-    public List<Empresa> findAll() {
-        List<Empresa> result = new ArrayList<>();
+    public List<Proyecto> findAll() {
+        List<Proyecto> result = new ArrayList<>();
         repository.findAll().forEach(e -> result.add(e));
         return result;
     }
 
-    public Empresa findById(long id) {
+    public Proyecto findById(long id) {
         return repository.findById(id).orElse(null);
     }
 
-    public Page<Empresa> findByPage(int page, int size) {
+    public Page<Proyecto> findByPage(int page, int size) {
         return repository.findAll(PageRequest.of(page, size));
     }
 
-    public List<Empresa> search(String term) {
-        return repository.search("%" + term.toUpperCase() + "%");
+    public List<Proyecto> search(String term) {
+        
+        return repository.findByDescripcionContainingIgnoreCase(term);
     }
 
     @Transactional
-    public Empresa save(Empresa e) {
-        return repository.save(e);
+    public Proyecto save(Proyecto p) {
+        
+        return repository.save(p);
     }
 
     @Transactional

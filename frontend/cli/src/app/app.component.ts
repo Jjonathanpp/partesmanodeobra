@@ -26,6 +26,11 @@ import { RouterModule } from '@angular/router';
               <i class="fas fa-building me-1"></i>Empresas (Clientes)
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/proyectos" routerLinkActive="active">
+              <i class="fas fa-project-diagram me-1"></i>Proyectos
+            </a>
+          </li>
         </ul>
       </div>
     </nav>

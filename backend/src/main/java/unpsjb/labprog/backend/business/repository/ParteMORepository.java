@@ -1,4 +1,4 @@
-package unpsjb.labprog.backend.business;
+package unpsjb.labprog.backend.business.repository;
 
 import java.time.LocalDate;
 import java.util.List;

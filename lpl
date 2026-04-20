@@ -38,7 +38,11 @@ case "$1" in
     docker exec -t backend mvn $2
     ;;
   test ) echo "Testing"
-    docker compose run --rm testing
+    if [ -n "$2" ]; then
+      docker compose run --rm testing npx cucumber-js "$2"
+    else
+      docker compose run --rm testing
+    fi
     ;;
   staging ) echo "Cargando staging $2"
     cat ./staging/$2.sql | docker exec -i database psql -q -U APP -d labprog
