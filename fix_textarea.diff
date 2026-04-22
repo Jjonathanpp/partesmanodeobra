@@ -1,0 +1,30 @@
+<<<<<<< SEARCH
+        <!-- Form Fields Row 2: Observaciones -->
+        <div class="row">
+          <div class="col-md-10 d-flex align-items-start">
+            <span class="custom-label mt-1">Observaciones</span>
+            <div class="flex-grow-1">
+              <input
+                name="observaciones"
+                class="form-control custom-input w-100"
+                [(ngModel)]="empresa.observaciones"
+              />
+            </div>
+          </div>
+        </div>
+=======
+        <!-- Form Fields Row 2: Observaciones -->
+        <div class="row">
+          <div class="col-md-10 d-flex align-items-start">
+            <span class="custom-label mt-1">Observaciones</span>
+            <div class="flex-grow-1">
+              <textarea
+                name="observaciones"
+                class="form-control custom-input w-100"
+                [(ngModel)]="empresa.observaciones"
+                rows="1"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+>>>>>>> REPLACE
